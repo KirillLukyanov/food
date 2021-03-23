@@ -127,7 +127,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* const modalTimerId = setTimeout(openModal, 60000); */
+    const modalTimerId = setTimeout(openModal, 60000);
 
     function showModalByScroll () {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
@@ -141,12 +141,13 @@ window.addEventListener('DOMContentLoaded', () => {
     // Menu
 
     class MenuCard {
-        constructor(src, alt, title, descr, price, parentSelector) {
+        constructor(src, alt, title, descr, price, parentSelector, ...classes) {
             this.src = src;
             this.alt = alt;
             this.title = title;
             this.descr = descr;
             this.price = price;
+            this.classes = classes;
             this.parent = document.querySelector(parentSelector);
             this.transfer = 74;
             this.changeToRUB();
@@ -158,7 +159,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
         render() {
             const element = document.createElement('div');
-            element.classList.add('menu__item');
+            if (this.classes.length === 0) {
+                this.element = 'menu__item';
+                element.classList.add(this.element);
+            } else {
+                this.classes.forEach(className => {element.classList.add(className);});
+            }
+            
             element.innerHTML = `
             <img src=${this.src} alt=${this.alt}>
             <h3 class="menu__item-subtitle">${this.title}</h3>
@@ -196,6 +203,5 @@ window.addEventListener('DOMContentLoaded', () => {
         'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
         15,
         '.menu__field .container').render();
-
 });
 
