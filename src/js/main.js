@@ -39,6 +39,81 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Slider
+
+    const slider = document.querySelector('.offer__slider'),
+          slides = slider.querySelectorAll('.offer__slide'),
+          sliderNext = slider.querySelector('.offer__slider-next'),
+          sliderPrev = slider.querySelector('.offer__slider-prev'),
+          sliderCurrent = slider.querySelector('#current'),
+          sliderTotal = slider.querySelector('#total');
+
+    let slideCounter = 1;
+
+    function hideSlide () {
+        slides.forEach(slide => {
+            slide.classList.add('hide');
+            slide.classList.remove('show', 'fade');
+        });
+    }
+
+    function showSlide (i = 0) {
+        slides[i].classList.add('show', 'fade');
+        slides[i].classList.remove('hide');
+    }
+
+    function showCurrentSlide() {
+        if (slideCounter < 9) {
+            sliderCurrent.textContent = `0${slideCounter}`;
+        } else {
+            sliderCurrent.textContent = slideCounter;
+        }
+    }
+
+    if (slides.length < 10) {
+        sliderTotal.textContent = `0${slides.length}`;
+    } else {
+        sliderTotal.textContent = slides.length;
+    }
+
+    function showNextSlide () {
+        sliderNext.addEventListener('click', (event) => {
+            const target = event.target;
+
+            if (target) {
+                slideCounter++;
+                if (slideCounter > slides.length) {
+                    slideCounter = 1;
+                }
+                hideSlide();
+                showSlide(slideCounter - 1);
+                showCurrentSlide();
+            }
+        });
+    }
+
+    function showPrevSlide () {
+        sliderPrev.addEventListener('click', (event) => {
+            const target = event.target;
+
+            if (target) {
+                slideCounter--;
+                if (slideCounter < 1) {
+                    slideCounter = slides.length;
+                }
+                hideSlide();
+                showSlide(slideCounter - 1);
+                showCurrentSlide();
+            }
+        });
+    }
+
+    hideSlide();
+    showSlide();
+    showCurrentSlide();
+    showNextSlide();
+    showPrevSlide();
+
     // Timer
 
     const deadline = '2021-04-30';
@@ -192,7 +267,7 @@ window.addEventListener('DOMContentLoaded', () => {
     getResource('http://localhost:3000/menu')
         .then(data => {
             data.forEach(({img, altimg, title, descr, price}) => {
-                new MenuCard(img, altimg, title, descr, price).render();
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
             });
         });
 
